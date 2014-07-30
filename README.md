@@ -4,7 +4,7 @@
 2. Run project
   * Start zookeeper server
   * Import maven dependency of project masterslave at: `https://github.com/hunghoang/masterslave.git`
-  * `java -jar package.jar <port>`
+  * `java -jar orderservice.jar <port>`
 
   * if you don't type port parameter, default port is 8080
 
