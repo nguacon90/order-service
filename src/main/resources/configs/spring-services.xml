@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="orderServiceSender" class="vn.com.vndirect.stock.OrderServiceSenderImpl"></bean>
+	<bean id="stockInfoService" class="vn.com.vndirect.stock.StockInfoServiceImpl"></bean>
+	<bean id="orderMemoryCache" class="vn.com.vndirect.services.OrderMemoryCacheImpl"></bean>
+	<bean id="logReportService" class="vn.com.vndirect.services.ReadingLogServiceImpl" init-method="readLogFile">
+		<constructor-arg index="0" value="${log4j.appender.reportsLog.File}" />
+		<constructor-arg index="1" ref="orderMemoryCache" />
+	</bean>
+	<bean id="statisticService" class="vn.com.vndirect.services.StatisticServiceImpl">
+		<constructor-arg index="0" ref="orderMemoryCache" />
+	</bean>
+	
+</beans>

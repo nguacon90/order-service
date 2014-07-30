@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="inputValidator" class="vn.com.vndirect.validator.InputValidatorImpl"></bean>
+	<bean id="priceValidator" class="vn.com.vndirect.validator.PriceValidatorImpl">
+		<constructor-arg index="0" ref="stockInfoService"/>
+	</bean>
+	
+	<bean id="orderTypeValidator" class="vn.com.vndirect.validator.OrderTypeValidatorImpl">
+		<constructor-arg index="0">
+			<list>
+				<value>LO</value>
+				<value>MP</value>
+				<value>ATC</value>
+				<value>ATO</value>
+				<value>MOK</value>
+				<value>MAK</value>
+				<value>MTL</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="orderValidator" class="vn.com.vndirect.validator.OrderValidatorImpl">
+		<property name="validators">
+			<list>
+				<ref bean="inputValidator"/>
+				<ref bean="priceValidator"/>
+				<ref bean="orderTypeValidator"/>
+			</list>
+		</property>
+	</bean>
+	
+</beans>
