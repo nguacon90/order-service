@@ -10,6 +10,8 @@ import org.glassfish.grizzly.servlet.WebappContext;
 import org.zk.ApplicationListener;
 import org.zk.ApplicationState;
 
+import vn.com.vndirect.utils.Constants;
+
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
@@ -29,38 +31,46 @@ public class OrderServiceListener implements ApplicationListener {
 	@Override
 	public void onChange(ApplicationState state) {
 		if (state.equals(ApplicationState.MASTER)) {
-			System.out.println("------------MASTER-----------------");
 			try {
-				WebappContext webAppContext = new WebappContext("webAppContext", "/rest");
-				final ServletRegistration reg = webAppContext.addServlet("spring", new SpringServlet());
-				reg.addMapping("/rest");
-				webAppContext.addContextInitParameter("contextConfigLocation", "classpath:configs/spring-context.xml");
-				webAppContext.addListener("org.springframework.web.context.ContextLoaderListener");
-				final ResourceConfig rc = new PackagesResourceConfig("vn.com.vndirect.resources");
-				rc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,true);
-				server = GrizzlyServerFactory.createHttpServer(baseUri, rc);
+				System.out.println("------------MASTER-----------------");
+				WebappContext webAppContext = createWebAppContext();
+				server = createGrizzlyServer(baseUri);
 				webAppContext.deploy(server);
-				
 				server.start();
-				System.out.println("Press any key to stop server!");
 				System.in.read();
 				server.stop();
-				System.out.println("Server stopped");
-
 			} catch (Exception e) {
 				log.error(e);
 				server.stop();
 			}
+
 		} else {
-			System.out.println("---------SLAVER-------------");
 			try {
+				System.out.println("---------SLAVER-------------");
 				server.stop();
-				System.out.println("Press any key to stop server!");
 				System.in.read();
 			} catch (IOException e) {
 				log.error(e);
+				server.stop();
 			}
 		}
+	}
+
+	private HttpServer createGrizzlyServer(URI baseUri) throws IOException {
+		final ResourceConfig rc = new PackagesResourceConfig(Constants.PACKAGE_RESOURCES);
+		rc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, true);
+		
+		return GrizzlyServerFactory.createHttpServer(baseUri + Constants.ROOT_CONTEXT_PATH, rc);
+	}
+
+	private WebappContext createWebAppContext() throws IOException {
+		WebappContext webAppContext = new WebappContext("webAppContext", Constants.ROOT_CONTEXT_PATH);
+		final ServletRegistration reg = webAppContext.addServlet("spring", new SpringServlet());
+		reg.addMapping(Constants.ROOT_CONTEXT_PATH);
+		webAppContext.addContextInitParameter(Constants.CONTEXT_LOCATION_PARAM, "classpath:configs/spring-context.xml");
+		webAppContext.addListener(Constants.SPRING_CONTEXT_LISTENER);
+		
+		return webAppContext;
 	}
 
 }
