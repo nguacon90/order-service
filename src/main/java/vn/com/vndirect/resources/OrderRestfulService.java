@@ -1,7 +1,6 @@
 package vn.com.vndirect.resources;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -47,13 +46,6 @@ public class OrderRestfulService{
 		return Response.status(Status.OK).entity(result).build();
 	}
 	
-	@GET
-	@Path("/sayHello")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response sayHello(){
-		return Response.status(Status.OK).entity("{\"Hello\": \"NguaCOn\"}").build();
-	}
-
 	public void setOrderValidator(Validator orderValidator) {
 		this.orderValidator = orderValidator;
 	}
