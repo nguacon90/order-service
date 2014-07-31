@@ -38,7 +38,7 @@ public class InputValidatorTest {
 	public void testAccountIsNull() {
 		try {
 			inputValidator.validate(order);
-			fail("Must throw ACCOUNT_NULL exception");
+			fail("Must throw INVALID_ACCOUNT exception");
 		} catch (ValidateException ve) {
 			assertEquals(ValidatorStatus.INVALID_ACCOUNT.getCode(),
 					ve.getCode());
@@ -50,7 +50,7 @@ public class InputValidatorTest {
 		try {
 			order = generateOrder(StringUtils.EMPTY, "VND", 12, 10, "ATO");
 			inputValidator.validate(order);
-			fail("Must throw ACCOUNT_NULL exception");
+			fail("Must throw INVALID_ACCOUNT exception");
 		} catch (ValidateException ve) {
 			assertEquals(ve.getCode(),
 					ValidatorStatus.INVALID_ACCOUNT.getCode());
